@@ -7,7 +7,7 @@ import ifaddr
 def sweep_network(args):
     ip_interface = ipaddress.IPv4Interface(args.ip + "/" + args.netmask)
     for ip in ip_interface.network:
-        r = str(pythonping.ping(str(ip), count=1, timeout=1))
+        r = str(pythonping.ping(str(ip), count=1, timeout=args.timeout))
         if "Reply" in r:
             tokens = r.split(" ")
             print(tokens[2].strip(","))
@@ -26,6 +26,11 @@ if __name__ == "__main__":
         "netmask", nargs="?",
         help="the netmask for the ip provided (default: 255.255.255.0)",
         default="255.255.255.0"
+    )
+    parser.add_argument(
+        "-t", "--timeout", nargs="?",
+        help="how much to wait for a response from ping, in seconds (default = 0.5)",
+        default="0.5", type=float
     )
 
     args = parser.parse_args()
